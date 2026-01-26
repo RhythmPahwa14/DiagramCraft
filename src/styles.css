@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.editor {
+  width: 50%;
+  border-right: 2px solid #ddd;
+}
+
+.preview {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  padding: 8px;
+  background: #f4f4f4;
+  border-bottom: 1px solid #ccc;
+}
+
+.toolbar button {
+  margin-right: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.diagram {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+  background: #ffffff;
+}
