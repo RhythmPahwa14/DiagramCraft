@@ -1,0 +1,77 @@
+/* Custom Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+/* Tailwind Base, Components, Utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Utility Classes */
+@layer utilities {
+  .glass-sidebar {
+    background: rgba(34, 22, 16, 0.8);
+    backdrop-filter: blur(12px);
+  }
+
+  .editor-bg {
+    background-color: #0a0807;
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .syntax-keyword {
+    color: #ec5b13;
+  }
+
+  .syntax-string {
+    color: #a5d6ff;
+  }
+
+  .syntax-comment {
+    color: #8b949e;
+  }
+
+  .syntax-node {
+    color: #79c0ff;
+  }
+}
+
+/* Material Symbols Icon Font */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* CodeMirror Dark Theme Override */
+.CodeMirror {
+  height: 100% !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 14px !important;
+  background-color: #0a0807 !important;
+  color: #d4d4d4 !important;
+}
+
+.CodeMirror-gutters {
+  background-color: #0a0807 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.CodeMirror-linenumber {
+  color: #4a5568 !important;
+}
