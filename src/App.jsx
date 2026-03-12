@@ -100,8 +100,29 @@ export default function App() {
 
   const renderDiagram = async (code) => {
     try {
+      // Add loading state
+      if (diagramRef.current) {
+        diagramRef.current.classList.add('loading');
+        diagramRef.current.classList.remove('animating');
+      }
+
       const { svg } = await mermaid.render("diagram_" + Date.now(), code);
       diagramRef.current.innerHTML = svg;
+
+      // Remove loading and trigger animation after a small delay
+      requestAnimationFrame(() => {
+        if (diagramRef.current) {
+          diagramRef.current.classList.remove('loading');
+          diagramRef.current.classList.add('animating');
+          
+          // Remove animating class after animation completes
+          setTimeout(() => {
+            if (diagramRef.current) {
+              diagramRef.current.classList.remove('animating');
+            }
+          }, 400);
+        }
+      });
 
       // Apply zoom
       const svgElement = diagramRef.current.querySelector("svg");
@@ -118,6 +139,9 @@ export default function App() {
         nodeCount: lines.filter((l) => l.includes("[") || l.includes("(")).length,
       });
     } catch (err) {
+      if (diagramRef.current) {
+        diagramRef.current.classList.remove('loading', 'animating');
+      }
       diagramRef.current.innerHTML = `
         <pre style="color:red; white-space:pre-wrap; font-family: monospace; padding: 1rem;">
 ${err.message}

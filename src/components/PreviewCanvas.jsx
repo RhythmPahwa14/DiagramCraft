@@ -1,4 +1,14 @@
+import { useState } from "react";
+
 export default function PreviewCanvas({ diagramRef, onZoomIn, onZoomOut, onRefresh }) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    onRefresh();
+    setTimeout(() => setIsRefreshing(false), 600);
+  };
+
   return (
     <div className="flex-1 bg-white flex flex-col relative border-l border-slate-200">
       <div className="h-9 flex items-center px-4 bg-slate-50 border-b border-slate-200 justify-between">
@@ -22,10 +32,18 @@ export default function PreviewCanvas({ diagramRef, onZoomIn, onZoomOut, onRefre
           </button>
           <button
             className="p-1 hover:bg-slate-200 rounded text-slate-600"
-            onClick={onRefresh}
+            onClick={handleRefresh}
             title="Refresh"
           >
-            <span className="material-symbols-outlined text-sm">refresh</span>
+            <span 
+              className="material-symbols-outlined text-sm"
+              style={{
+                display: 'inline-block',
+                animation: isRefreshing ? 'rotate360 0.6s ease' : 'none'
+              }}
+            >
+              refresh
+            </span>
           </button>
         </div>
       </div>
