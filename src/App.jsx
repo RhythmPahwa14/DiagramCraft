@@ -63,6 +63,43 @@ export default function App() {
   const [liveRender, setLiveRender] = useState(false);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [diagramTheme, setDiagramTheme] = useState(() => {
+    return localStorage.getItem('diagramcraft-theme') || 'default';
+  });
+  const [customColors, setCustomColors] = useState(() => {
+    const saved = localStorage.getItem('diagramcraft-custom-colors');
+    return saved ? JSON.parse(saved) : {
+      primaryColor: '#F8BBD0',
+      primaryTextColor: '#1A1A1A',
+      secondaryColor: '#C5E1A5',
+      secondaryTextColor: '#1A1A1A',
+      tertiaryColor: '#FFCCBC',
+      tertiaryTextColor: '#1A1A1A',
+      primaryBorderColor: '#F06292',
+      lineColor: '#757575',
+      background: '#FAFAFA',
+      mainBkg: '#FFF0F5',
+      secondBkg: '#F0F4C3',
+      nodeBorder: '#E91E63',
+      clusterBkg: '#FCE4EC',
+      clusterBorder: '#F48FB1',
+      textColor: '#1A1A1A',
+      labelColor: '#1A1A1A',
+      labelTextColor: '#1A1A1A',
+      edgeLabelBackground: 'rgba(0,0,0,0)',
+      edgeLabelColor: '#1A1A1A',
+      fontSize: '16px',
+      fontFamily: 'Arial',
+      git0: '#E1BEE7',
+      git1: '#B2DFDB',
+      git2: '#FFE0B2',
+      git3: '#FFCCBC',
+      git4: '#C5E1A5',
+      git5: '#F8BBD0',
+      git6: '#BBDEFB',
+      git7: '#E6EE9C',
+    };
+  });
 
   // Save projects whenever they change
   useEffect(() => {
@@ -100,8 +137,48 @@ export default function App() {
 
   const renderDiagram = async (code) => {
     try {
+      // Add loading state
+      if (diagramRef.current) {
+        diagramRef.current.classList.add('loading');
+        diagramRef.current.classList.remove('animating');
+      }
+
+      // Reinitialize mermaid with current theme
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: diagramTheme === 'custom' ? 'base' : diagramTheme,
+        themeVariables: diagramTheme === 'custom' ? {
+          ...customColors,
+          edgeLabelBackground: 'transparent',
+        } : {
+          edgeLabelBackground: 'transparent',
+          labelTextColor: '#000000',
+          labelColor: '#000000',
+        },
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis',
+        },
+      });
+
       const { svg } = await mermaid.render("diagram_" + Date.now(), code);
       diagramRef.current.innerHTML = svg;
+
+      // Remove loading and trigger animation after a small delay
+      requestAnimationFrame(() => {
+        if (diagramRef.current) {
+          diagramRef.current.classList.remove('loading');
+          diagramRef.current.classList.add('animating');
+          
+          // Remove animating class after animation completes
+          setTimeout(() => {
+            if (diagramRef.current) {
+              diagramRef.current.classList.remove('animating');
+            }
+          }, 400);
+        }
+      });
 
       // Apply zoom
       const svgElement = diagramRef.current.querySelector("svg");
@@ -118,6 +195,9 @@ export default function App() {
         nodeCount: lines.filter((l) => l.includes("[") || l.includes("(")).length,
       });
     } catch (err) {
+      if (diagramRef.current) {
+        diagramRef.current.classList.remove('loading', 'animating');
+      }
       diagramRef.current.innerHTML = `
         <pre style="color:red; white-space:pre-wrap; font-family: monospace; padding: 1rem;">
 ${err.message}
@@ -259,6 +339,28 @@ ${err.message}
     setZoom((prev) => Math.max(prev - 0.1, 0.5));
   };
 
+  const handleThemeChange = (theme) => {
+    setDiagramTheme(theme);
+    localStorage.setItem('diagramcraft-theme', theme);
+    // Re-render diagram with new theme
+    if (editorInstance.current) {
+      const code = editorInstance.current.getValue();
+      renderDiagram(code);
+    }
+  };
+
+  const handleColorChange = (colorKey, value) => {
+    const updated = { ...customColors, [colorKey]: value };
+    setCustomColors(updated);
+    localStorage.setItem('diagramcraft-custom-colors', JSON.stringify(updated));
+  };
+
+  const handleBulkColorChange = (newColors) => {
+    const updated = { ...customColors, ...newColors };
+    setCustomColors(updated);
+    localStorage.setItem('diagramcraft-custom-colors', JSON.stringify(updated));
+  };
+
   const handleUndo = () => {
     if (historyIndex > 0) {
       handleRestoreVersion(historyIndex - 1);
@@ -311,6 +413,16 @@ ${err.message}
       svgElement.style.transition = "transform 0.2s ease";
     }
   }, [zoom]);
+
+  // Re-render diagram when theme or custom colors change
+  useEffect(() => {
+    if (editorInstance.current) {
+      const code = editorInstance.current.getValue();
+      if (code && code.trim()) {
+        renderDiagram(code);
+      }
+    }
+  }, [diagramTheme, customColors]);
 
   // Initialize history with current project code
   useEffect(() => {
@@ -372,6 +484,11 @@ ${err.message}
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onRefresh={handleRefresh}
+            theme={diagramTheme}
+            onThemeChange={handleThemeChange}
+            customColors={customColors}
+            onColorChange={handleColorChange}
+            onBulkColorChange={handleBulkColorChange}
           />
 
           {activeTab === "intelligence" && (
