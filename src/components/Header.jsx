@@ -24,20 +24,7 @@ export default function Header({ fileName = "Untitled", liveRender, onToggleLive
         </nav>
       </div>
 
-      <div className="flex-1 max-w-md mx-8 hidden sm:block">
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-            <span className="material-symbols-outlined text-sm">search</span>
-          </div>
-          <input
-            className="w-full bg-slate-100 dark:bg-white/5 border-none rounded-lg py-1.5 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary/50 placeholder:text-slate-400 transition-all"
-            placeholder="Search or jump to... (⌘K)"
-            type="text"
-          />
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ml-auto">
         <button
           onClick={onToggleLiveRender}
           className={`flex items-center gap-4 px-3 py-1 rounded-full border transition-all cursor-pointer ${
@@ -60,10 +47,6 @@ export default function Header({ fileName = "Untitled", liveRender, onToggleLive
             <span className="material-symbols-outlined text-[14px] text-primary">cloud_done</span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Synced</span>
           </div>
-        </button>
-
-        <button className="size-8 rounded-full bg-slate-900 dark:bg-primary flex items-center justify-center text-white hover:opacity-90 transition-opacity">
-          <span className="material-symbols-outlined text-lg">person</span>
         </button>
       </div>
     </header>

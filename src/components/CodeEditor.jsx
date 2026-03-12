@@ -15,6 +15,8 @@ export default function CodeEditor({ initialValue, onRender, onChange, editorIns
       mode: "text/plain",
       lineNumbers: true,
       theme: "default",
+      autofocus: true,
+      cursorBlinkRate: 530,
     });
 
     // Setup change listener for live rendering
