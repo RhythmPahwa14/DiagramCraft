@@ -159,6 +159,7 @@ export default function App() {
           useMaxWidth: true,
           htmlLabels: true,
           curve: 'basis',
+          padding: 12,
         },
       });
 
