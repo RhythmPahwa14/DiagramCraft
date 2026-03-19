@@ -100,6 +100,14 @@ export default function Footer({ onUndo, onRedo, onExport, canUndo = false, canR
                   <span className="material-symbols-outlined text-base">photo</span>
                   Export as PNG
                 </button>
+                <div className="h-px bg-slate-200 dark:bg-slate-700" />
+                <button
+                  className="w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors"
+                  onClick={() => handleExportClick('png-hd')}
+                >
+                  <span className="material-symbols-outlined text-base">high_quality</span>
+                  Export as PNG (HD)
+                </button>
               </div>
             </>
           )}

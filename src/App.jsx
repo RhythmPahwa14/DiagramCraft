@@ -378,7 +378,9 @@ ${err.message}
     if (format === "svg") {
       downloadSVG();
     } else if (format === "png") {
-      downloadPNG();
+      downloadPNG({ pixelRatio: 2, fileName: "diagram.png" });
+    } else if (format === "png-hd") {
+      downloadPNG({ pixelRatio: 4, fileName: "diagram-hd.png" });
     }
   };
 
@@ -396,13 +398,30 @@ ${err.message}
     a.click();
   };
 
-  const downloadPNG = () => {
-    htmlToImage.toPng(diagramRef.current).then((dataUrl) => {
+  const downloadPNG = async ({ pixelRatio = 2, fileName = "diagram.png" } = {}) => {
+    const container = diagramRef.current;
+    const svg = container?.querySelector("svg");
+
+    if (!container || !svg) {
+      alert("Render diagram first");
+      return;
+    }
+
+    try {
+      const dataUrl = await htmlToImage.toPng(container, {
+        pixelRatio,
+        cacheBust: true,
+        backgroundColor: "#ffffff",
+      });
+
       const a = document.createElement("a");
       a.href = dataUrl;
-      a.download = "diagram.png";
+      a.download = fileName;
       a.click();
-    });
+    } catch (error) {
+      console.error("PNG export failed:", error);
+      alert("Failed to export PNG. Please try again.");
+    }
   };
 
   // Apply zoom when it changes
