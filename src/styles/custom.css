@@ -229,6 +229,7 @@ input[type="color"]::-webkit-color-swatch {
   color: #1A1A1A !important;
   font-weight: 500 !important;
   background: transparent !important;
+  transform: translateX(6px);
 }
 
 /* Force transparent backgrounds on all edge label elements */
@@ -245,4 +246,5 @@ input[type="color"]::-webkit-color-swatch {
 text.edgeLabel {
   fill: #1A1A1A !important;
   background: transparent !important;
+  transform: translateX(6px);
 }

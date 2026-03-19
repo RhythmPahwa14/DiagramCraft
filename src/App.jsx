@@ -166,6 +166,16 @@ export default function App() {
       const { svg } = await mermaid.render("diagram_" + Date.now(), code);
       diagramRef.current.innerHTML = svg;
 
+      const edgeLabels = diagramRef.current.querySelectorAll('.edgeLabel .label, .edgeLabel text, text.edgeLabel');
+      edgeLabels.forEach((label) => {
+        const text = label.textContent?.trim().toLowerCase();
+        if (text === 'yes') {
+          label.style.transform = 'translateX(-24px)';
+        } else if (text === 'no') {
+          label.style.transform = 'translateX(-1px)';
+        }
+      });
+
       // Remove loading and trigger animation after a small delay
       requestAnimationFrame(() => {
         if (diagramRef.current) {
